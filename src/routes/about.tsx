@@ -1,60 +1,123 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { Rocket, Target, Compass } from "lucide-react";
-import { SiteLayout, PageHeader } from "@/components/site-layout";
+import { Compass, Flag, Layers, Target, Sparkles } from "lucide-react";
+import { GlassCard, PageHeader, Reveal, SectionHeading } from "@/components/Primitives";
 
 export const Route = createFileRoute("/about")({
   head: () => ({
     meta: [
-      { title: "About — IdleSpace" },
-      { name: "description", content: "The story, mission and vision behind IdleSpace." },
-      { property: "og:title", content: "About — IdleSpace" },
-      { property: "og:description", content: "The story behind IdleSpace." },
+      { title: "About JanSamarth Chain — Vision, Mission & Objectives" },
+      {
+        name: "description",
+        content:
+          "What JanSamarth Chain is, why transparent public fund escrow is needed, and the vision, mission and objectives behind the platform.",
+      },
+      { property: "og:title", content: "About JanSamarth Chain" },
+      { property: "og:description", content: "Vision, mission and objectives of a transparent governance ledger." },
     ],
   }),
   component: About,
 });
 
-const timeline = [
-  { year: "2023", title: "Founded", body: "IdleSpace was born from a napkin sketch in a Brooklyn café." },
-  { year: "2024", title: "1,000 hosts", body: "Our first cohort of hosts joined across NYC and SF." },
-  { year: "2025", title: "AI matching", body: "We launched AI-powered matching and dynamic pricing." },
-  { year: "2026", title: "84 cities", body: "IdleSpace is now live in 84 cities worldwide." },
+const objectives = [
+  "Publish every sanctioned project with budget, milestones and timelines in a public record.",
+  "Lock funds in escrow so no disbursement happens without verified proof of work.",
+  "Reduce payment cycles for contractors from months to minutes after verification.",
+  "Give every citizen a searchable, district-level view of public spending.",
+  "Create an immutable audit trail for CAG-style review and RTI responses.",
+  "Standardise milestone evidence formats across departments and states.",
 ];
 
 function About() {
   return (
-    <SiteLayout>
-      <PageHeader eyebrow="About" title="Every space has a second life." subtitle="We're building the marketplace that unlocks the world's underused business spaces." />
-      <div className="mx-auto max-w-4xl px-4 pb-16">
-        <div className="grid md:grid-cols-3 gap-4">
-          {[
-            { icon: Rocket, title: "Story", body: "Founded in 2023 to give small businesses a new revenue stream." },
-            { icon: Target, title: "Mission", body: "Make every unused hour productive — for hosts and guests." },
-            { icon: Compass, title: "Vision", body: "A world where no square foot goes to waste." },
-          ].map((c) => (
-            <div key={c.title} className="rounded-3xl bg-card border border-border p-6 hover-lift">
-              <div className="h-10 w-10 rounded-xl gradient-primary grid place-items-center text-white"><c.icon className="h-4 w-4" /></div>
-              <h3 className="mt-4 font-semibold">{c.title}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{c.body}</p>
-            </div>
-          ))}
+    <div>
+      <PageHeader
+        eyebrow="About the project"
+        title="A public ledger for public money"
+        description="JanSamarth Chain is a concept platform that re-imagines how government infrastructure funds move — from sanction to settlement — with verifiable evidence at every step."
+      />
+
+      <section className="mx-auto max-w-7xl px-5 py-10">
+        <div className="grid gap-5 lg:grid-cols-2">
+          <Reveal>
+            <GlassCard className="h-full">
+              <Sparkles className="h-6 w-6 text-accent" />
+              <h2 className="mt-5 text-2xl font-semibold">What is JanSamarth Chain?</h2>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                It is a milestone-based escrow layer for public projects. A department creates a project, the sanctioned
+                budget is locked in a smart contract, and the contractor is paid automatically as each milestone is
+                proven and verified. Every action writes to a shared ledger that citizens can read without asking
+                anyone's permission.
+              </p>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                This interface is a design prototype: all figures, projects and ledger entries shown are mock data.
+              </p>
+            </GlassCard>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <GlassCard className="h-full">
+              <Layers className="h-6 w-6 text-info" />
+              <h2 className="mt-5 text-2xl font-semibold">Why it is needed</h2>
+              <ul className="mt-3 grid gap-3 text-sm leading-relaxed text-muted-foreground">
+                <li>Public works records are fragmented across files, portals and departments.</li>
+                <li>Milestone sign-off depends on manual inspection notes that are hard to audit later.</li>
+                <li>Contractors wait months for payments already sanctioned on paper.</li>
+                <li>Citizens rarely learn whether the project outside their home was funded or finished.</li>
+              </ul>
+            </GlassCard>
+          </Reveal>
         </div>
 
-        <div className="mt-16">
-          <h2 className="text-2xl font-bold tracking-tight">Timeline</h2>
-          <div className="mt-6 relative pl-6">
-            <div className="absolute left-2 top-1 bottom-1 w-0.5 gradient-primary rounded-full" />
-            {timeline.map((t, i) => (
-              <div key={t.year} className="relative mb-6 animate-fade-up" style={{ animationDelay: `${i * 80}ms` }}>
-                <div className="absolute -left-6 top-1 h-3 w-3 rounded-full gradient-primary shadow-glow" />
-                <div className="text-xs uppercase tracking-widest text-primary font-semibold">{t.year}</div>
-                <div className="font-semibold mt-1">{t.title}</div>
-                <div className="text-sm text-muted-foreground">{t.body}</div>
-              </div>
-            ))}
-          </div>
+        <div className="mt-5 grid gap-5 md:grid-cols-2">
+          <Reveal>
+            <GlassCard className="h-full">
+              <Compass className="h-6 w-6 text-accent" />
+              <h3 className="mt-5 text-xl font-semibold">Vision</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                A country where any citizen can verify the status of any publicly funded project in under thirty
+                seconds — without an application, an intermediary, or a favour.
+              </p>
+            </GlassCard>
+          </Reveal>
+          <Reveal delay={0.08}>
+            <GlassCard className="h-full">
+              <Flag className="h-6 w-6 text-info" />
+              <h3 className="mt-5 text-xl font-semibold">Mission</h3>
+              <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
+                To make verified proof — not paperwork — the only trigger for releasing public money, and to publish
+                that proof openly by default.
+              </p>
+            </GlassCard>
+          </Reveal>
         </div>
-      </div>
-    </SiteLayout>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-5 py-12">
+        <SectionHeading eyebrow="Objectives" title="What the platform sets out to achieve" />
+        <div className="mt-10 grid gap-4 md:grid-cols-2">
+          {objectives.map((o, i) => (
+            <Reveal key={o} delay={i * 0.06}>
+              <div className="glass grid grid-cols-[auto_minmax(0,1fr)] items-start gap-4 rounded-2xl p-5">
+                <span className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-brand text-sm font-semibold text-primary-foreground">
+                  {String(i + 1).padStart(2, "0")}
+                </span>
+                <p className="min-w-0 text-sm leading-relaxed text-muted-foreground">{o}</p>
+              </div>
+            </Reveal>
+          ))}
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-5 pb-8">
+        <Reveal>
+          <GlassCard className="grid gap-6 md:grid-cols-[auto_minmax(0,1fr)] md:items-center">
+            <Target className="h-10 w-10 text-accent" />
+            <p className="text-base leading-relaxed text-muted-foreground">
+              Transparency is not a report published at the end of a financial year. It is a live, shared state that
+              every stakeholder reads from the same place, at the same moment.
+            </p>
+          </GlassCard>
+        </Reveal>
+      </section>
+    </div>
   );
 }
