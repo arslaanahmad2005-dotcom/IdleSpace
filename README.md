@@ -1,125 +1,51 @@
-# 🚀 JanSamarth Chain
-### Smart Contract Escrow & Public Fund Transparency Engine for Digital India
+# IdleSpace
 
-> Building Trust Through Transparent Governance with Blockchain.
+IdleSpace is a marketplace platform connecting property owners with businesses and individuals looking for temporary commercial spaces by the hour (restaurants, studios, kitchens, classrooms, meeting rooms, etc.).
 
----
+## Features
 
-## 📖 Overview
+- **Secure User Authentication** (Supabase Auth: Email/Password, Google OAuth, Apple OAuth)
+- **Protected Routes & Role State** (Dashboard, Profile management, Add Space listings, Booking checkout)
+- **Property Listings & Search** (Categorized directory, real-time filters, price sliders)
+- **Dynamic AI Insights** (AI pricing estimates, occupancy trends, tailored recommendations)
+- **Booking Management** (Upcoming/past booking history, host dashboard)
+- **Modern Responsive UI** (Dark mode toggle, glassmorphism, responsive navigation)
 
-**JanSamarth Chain** is a blockchain-powered platform designed to transform the way government funds are managed and distributed. By combining **Smart Contracts**, **Blockchain Technology**, and **Digital Identity Verification**, the platform ensures secure, transparent, and automated public fund disbursement.
+## Tech Stack
 
-The system locks government funds in a blockchain-based escrow account and releases payments automatically after verified project milestones are completed. Every transaction is recorded on an immutable public ledger, enabling citizens to track fund utilization in real time.
+- **Framework**: React 19, Vite, TanStack Router & Start
+- **Styling**: Tailwind CSS v4, Radix UI primitives, Lucide icons, Recharts
+- **Backend / Authentication**: Supabase (`@supabase/supabase-js`)
 
----
+## Security & Environment Configuration
 
-## ❗ Problem Statement
+### 1. Environment Variables
+Create a `.env` file in the root directory (or copy from `.env.example`):
 
-Current public fund management faces several challenges:
+```bash
+cp .env.example .env
+```
 
-- Lack of transparency in fund allocation
-- Delayed payment releases
-- Manual and time-consuming verification
-- Corruption and misuse of public funds
-- Limited accountability
-- No real-time tracking for citizens
-- Low public trust in financial governance
+Set the required environment variables:
+```env
+VITE_SUPABASE_URL=https://your-project.supabase.co
+VITE_SUPABASE_ANON_KEY=your-anon-public-key
+```
 
----
+> ⚠️ **CRITICAL SECURITY NOTICES**:
+> - **Row Level Security (RLS)**: The `VITE_SUPABASE_ANON_KEY` is public-safe on the client side **ONLY IF** Row Level Security (RLS) is enabled and enforced on every table in your Supabase database. Ensure all tables (`spaces`, `bookings`, `profiles`, etc.) have RLS enabled with explicit policies before deploying to production.
+> - **Never Expose Service Role Keys**: The Supabase `service_role` key must **NEVER** be committed, hardcoded, or placed in any `VITE_` environment variable or client code.
+> - **Secret Rotation Warning**: If any API key, database password, or secret was previously committed or hardcoded anywhere in past commits or local drafts, consider it compromised and **rotate all credentials immediately** in their respective provider consoles (Supabase, Google Cloud, Stripe, etc.).
 
-## 💡 Solution
+## Getting Started
 
-JanSamarth Chain introduces a decentralized escrow mechanism powered by blockchain.
+```bash
+# Install dependencies
+npm install
 
-### Workflow
+# Start local development server
+npm run dev
 
-1. Government creates a project and deposits funds.
-2. Funds are locked inside a Smart Contract.
-3. Contractors upload milestone proof.
-4. Authorized officers verify the milestone.
-5. Smart Contract automatically releases payment.
-6. Every transaction is recorded on the blockchain.
-7. Citizens monitor progress through a public dashboard.
-
----
-
-## ✨ Key Features
-
-- 🔐 Smart Contract Escrow
-- ⛓️ Blockchain-based Transparency
-- 💸 Automatic Milestone Payments
-- 📊 Real-Time Public Dashboard
-- 🆔 Aadhaar e-KYC Verification
-- 📍 Geo-tagged Project Proof
-- 📁 Immutable Public Ledger
-- 🔍 Complete Fund Traceability
-
----
-
-## 🛠 Technology Stack
-
-### Frontend
-- Next.js
-- Tailwind CSS
-- Ethers.js
-
-### Backend
-- Node.js
-- Express.js
-
-### Blockchain
-- Solidity
-- Ethereum EVM
-
-### Storage
-- IPFS
-- Pinata
-
-### Authentication
-- Aadhaar e-KYC
-- Bhashini API
-
-### Deployment
-- GitHub
-- Vercel
-
----
-
-## 📈 Expected Impact
-
-- Increased transparency in public spending
-- Faster and automated payment disbursement
-- Reduced corruption and fund leakage
-- Improved citizen trust
-- Complete traceability of transactions
-- Transparent governance for Digital India
-
----
-
-## 🎯 Vision
-
-To create a transparent, accountable, and secure public fund ecosystem where every citizen can verify how government funds are utilized through blockchain technology.
-
----
-
-## 👥 Team
-
-| Name | Role |
-|------|------|
-| **Arslaan Ahmad** | **Team Leader & Frontend Developer** |
-| **Aryan Veer Singh** | **Backend Developer** |
-| **Aditya Kumar** | **UI/UX Designer & Presentation** |
-
----
-
-## 📌 Project Status
-
-🚧 Prototype Development
-
-Built for **TNX CODATHON 2K26** under the **Blockchain & Digital Trust** Track.
-
----
-
-## 📜 License
-
-This project is developed for educational, research, and hackathon purposes.
+# Open in browser
+# http://localhost:8080/
+```

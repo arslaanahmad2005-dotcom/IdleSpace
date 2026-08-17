@@ -11,17 +11,28 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
-import { Route as CitizenRouteImport } from './routes/citizen'
+import { Route as AddSpaceRouteImport } from './routes/add-space'
+import { Route as AiPricingRouteImport } from './routes/ai-pricing'
+import { Route as AiRecommendationsRouteImport } from './routes/ai-recommendations'
+import { Route as BrowseRouteImport } from './routes/browse'
 import { Route as ContactRouteImport } from './routes/contact'
-import { Route as ContractorRouteImport } from './routes/contractor'
 import { Route as DashboardRouteImport } from './routes/dashboard'
-import { Route as GovernmentRouteImport } from './routes/government'
-import { Route as ImpactRouteImport } from './routes/impact'
-import { Route as ProblemRouteImport } from './routes/problem'
+import { Route as FaqRouteImport } from './routes/faq'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as NotificationsRouteImport } from './routes/notifications'
+import { Route as PrivacyRouteImport } from './routes/privacy'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as SignupRouteImport } from './routes/signup'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as SolutionRouteImport } from './routes/solution'
-import { Route as TechnologyRouteImport } from './routes/technology'
-import { Route as WorkflowRouteImport } from './routes/workflow'
+import { Route as TermsRouteImport } from './routes/terms'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
+import { Route as BookingConfirmedIdRouteImport } from './routes/booking-confirmed.$id'
+import { Route as BookingIdRouteImport } from './routes/booking.$id'
+import { Route as HostDashboardRouteImport } from './routes/host.dashboard'
+import { Route as HostEarningsRouteImport } from './routes/host.earnings'
+import { Route as HostManageBookingsRouteImport } from './routes/host.manage-bookings'
+import { Route as HostManageListingsRouteImport } from './routes/host.manage-listings'
+import { Route as SpaceIdRouteImport } from './routes/space.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -33,9 +44,24 @@ const AboutRoute = AboutRouteImport.update({
   path: '/about',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CitizenRoute = CitizenRouteImport.update({
-  id: '/citizen',
-  path: '/citizen',
+const AddSpaceRoute = AddSpaceRouteImport.update({
+  id: '/add-space',
+  path: '/add-space',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiPricingRoute = AiPricingRouteImport.update({
+  id: '/ai-pricing',
+  path: '/ai-pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AiRecommendationsRoute = AiRecommendationsRouteImport.update({
+  id: '/ai-recommendations',
+  path: '/ai-recommendations',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BrowseRoute = BrowseRouteImport.update({
+  id: '/browse',
+  path: '/browse',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ContactRoute = ContactRouteImport.update({
@@ -43,29 +69,39 @@ const ContactRoute = ContactRouteImport.update({
   path: '/contact',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ContractorRoute = ContractorRouteImport.update({
-  id: '/contractor',
-  path: '/contractor',
-  getParentRoute: () => rootRouteImport,
-} as any)
 const DashboardRoute = DashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
-const GovernmentRoute = GovernmentRouteImport.update({
-  id: '/government',
-  path: '/government',
+const FaqRoute = FaqRouteImport.update({
+  id: '/faq',
+  path: '/faq',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ImpactRoute = ImpactRouteImport.update({
-  id: '/impact',
-  path: '/impact',
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProblemRoute = ProblemRouteImport.update({
-  id: '/problem',
-  path: '/problem',
+const NotificationsRoute = NotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PrivacyRoute = PrivacyRouteImport.update({
+  id: '/privacy',
+  path: '/privacy',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SignupRoute = SignupRouteImport.update({
+  id: '/signup',
+  path: '/signup',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -73,130 +109,237 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const SolutionRoute = SolutionRouteImport.update({
-  id: '/solution',
-  path: '/solution',
+const TermsRoute = TermsRouteImport.update({
+  id: '/terms',
+  path: '/terms',
   getParentRoute: () => rootRouteImport,
 } as any)
-const TechnologyRoute = TechnologyRouteImport.update({
-  id: '/technology',
-  path: '/technology',
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WorkflowRoute = WorkflowRouteImport.update({
-  id: '/workflow',
-  path: '/workflow',
+const BookingConfirmedIdRoute = BookingConfirmedIdRouteImport.update({
+  id: '/booking-confirmed/$id',
+  path: '/booking-confirmed/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BookingIdRoute = BookingIdRouteImport.update({
+  id: '/booking/$id',
+  path: '/booking/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HostDashboardRoute = HostDashboardRouteImport.update({
+  id: '/host/dashboard',
+  path: '/host/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HostEarningsRoute = HostEarningsRouteImport.update({
+  id: '/host/earnings',
+  path: '/host/earnings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HostManageBookingsRoute = HostManageBookingsRouteImport.update({
+  id: '/host/manage-bookings',
+  path: '/host/manage-bookings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HostManageListingsRoute = HostManageListingsRouteImport.update({
+  id: '/host/manage-listings',
+  path: '/host/manage-listings',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SpaceIdRoute = SpaceIdRouteImport.update({
+  id: '/space/$id',
+  path: '/space/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/citizen': typeof CitizenRoute
+  '/add-space': typeof AddSpaceRoute
+  '/ai-pricing': typeof AiPricingRoute
+  '/ai-recommendations': typeof AiRecommendationsRoute
+  '/browse': typeof BrowseRoute
   '/contact': typeof ContactRoute
-  '/contractor': typeof ContractorRoute
   '/dashboard': typeof DashboardRoute
-  '/government': typeof GovernmentRoute
-  '/impact': typeof ImpactRoute
-  '/problem': typeof ProblemRoute
+  '/faq': typeof FaqRoute
+  '/login': typeof LoginRoute
+  '/notifications': typeof NotificationsRoute
+  '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
+  '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/solution': typeof SolutionRoute
-  '/technology': typeof TechnologyRoute
-  '/workflow': typeof WorkflowRoute
+  '/terms': typeof TermsRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/booking-confirmed/$id': typeof BookingConfirmedIdRoute
+  '/booking/$id': typeof BookingIdRoute
+  '/host/dashboard': typeof HostDashboardRoute
+  '/host/earnings': typeof HostEarningsRoute
+  '/host/manage-bookings': typeof HostManageBookingsRoute
+  '/host/manage-listings': typeof HostManageListingsRoute
+  '/space/$id': typeof SpaceIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/citizen': typeof CitizenRoute
+  '/add-space': typeof AddSpaceRoute
+  '/ai-pricing': typeof AiPricingRoute
+  '/ai-recommendations': typeof AiRecommendationsRoute
+  '/browse': typeof BrowseRoute
   '/contact': typeof ContactRoute
-  '/contractor': typeof ContractorRoute
   '/dashboard': typeof DashboardRoute
-  '/government': typeof GovernmentRoute
-  '/impact': typeof ImpactRoute
-  '/problem': typeof ProblemRoute
+  '/faq': typeof FaqRoute
+  '/login': typeof LoginRoute
+  '/notifications': typeof NotificationsRoute
+  '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
+  '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/solution': typeof SolutionRoute
-  '/technology': typeof TechnologyRoute
-  '/workflow': typeof WorkflowRoute
+  '/terms': typeof TermsRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/booking-confirmed/$id': typeof BookingConfirmedIdRoute
+  '/booking/$id': typeof BookingIdRoute
+  '/host/dashboard': typeof HostDashboardRoute
+  '/host/earnings': typeof HostEarningsRoute
+  '/host/manage-bookings': typeof HostManageBookingsRoute
+  '/host/manage-listings': typeof HostManageListingsRoute
+  '/space/$id': typeof SpaceIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
-  '/citizen': typeof CitizenRoute
+  '/add-space': typeof AddSpaceRoute
+  '/ai-pricing': typeof AiPricingRoute
+  '/ai-recommendations': typeof AiRecommendationsRoute
+  '/browse': typeof BrowseRoute
   '/contact': typeof ContactRoute
-  '/contractor': typeof ContractorRoute
   '/dashboard': typeof DashboardRoute
-  '/government': typeof GovernmentRoute
-  '/impact': typeof ImpactRoute
-  '/problem': typeof ProblemRoute
+  '/faq': typeof FaqRoute
+  '/login': typeof LoginRoute
+  '/notifications': typeof NotificationsRoute
+  '/privacy': typeof PrivacyRoute
+  '/profile': typeof ProfileRoute
+  '/signup': typeof SignupRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/solution': typeof SolutionRoute
-  '/technology': typeof TechnologyRoute
-  '/workflow': typeof WorkflowRoute
+  '/terms': typeof TermsRoute
+  '/auth/callback': typeof AuthCallbackRoute
+  '/booking-confirmed/$id': typeof BookingConfirmedIdRoute
+  '/booking/$id': typeof BookingIdRoute
+  '/host/dashboard': typeof HostDashboardRoute
+  '/host/earnings': typeof HostEarningsRoute
+  '/host/manage-bookings': typeof HostManageBookingsRoute
+  '/host/manage-listings': typeof HostManageListingsRoute
+  '/space/$id': typeof SpaceIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
     | '/about'
-    | '/citizen'
+    | '/add-space'
+    | '/ai-pricing'
+    | '/ai-recommendations'
+    | '/browse'
     | '/contact'
-    | '/contractor'
     | '/dashboard'
-    | '/government'
-    | '/impact'
-    | '/problem'
+    | '/faq'
+    | '/login'
+    | '/notifications'
+    | '/privacy'
+    | '/profile'
+    | '/signup'
     | '/sitemap.xml'
-    | '/solution'
-    | '/technology'
-    | '/workflow'
+    | '/terms'
+    | '/auth/callback'
+    | '/booking-confirmed/$id'
+    | '/booking/$id'
+    | '/host/dashboard'
+    | '/host/earnings'
+    | '/host/manage-bookings'
+    | '/host/manage-listings'
+    | '/space/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/about'
-    | '/citizen'
+    | '/add-space'
+    | '/ai-pricing'
+    | '/ai-recommendations'
+    | '/browse'
     | '/contact'
-    | '/contractor'
     | '/dashboard'
-    | '/government'
-    | '/impact'
-    | '/problem'
+    | '/faq'
+    | '/login'
+    | '/notifications'
+    | '/privacy'
+    | '/profile'
+    | '/signup'
     | '/sitemap.xml'
-    | '/solution'
-    | '/technology'
-    | '/workflow'
+    | '/terms'
+    | '/auth/callback'
+    | '/booking-confirmed/$id'
+    | '/booking/$id'
+    | '/host/dashboard'
+    | '/host/earnings'
+    | '/host/manage-bookings'
+    | '/host/manage-listings'
+    | '/space/$id'
   id:
     | '__root__'
     | '/'
     | '/about'
-    | '/citizen'
+    | '/add-space'
+    | '/ai-pricing'
+    | '/ai-recommendations'
+    | '/browse'
     | '/contact'
-    | '/contractor'
     | '/dashboard'
-    | '/government'
-    | '/impact'
-    | '/problem'
+    | '/faq'
+    | '/login'
+    | '/notifications'
+    | '/privacy'
+    | '/profile'
+    | '/signup'
     | '/sitemap.xml'
-    | '/solution'
-    | '/technology'
-    | '/workflow'
+    | '/terms'
+    | '/auth/callback'
+    | '/booking-confirmed/$id'
+    | '/booking/$id'
+    | '/host/dashboard'
+    | '/host/earnings'
+    | '/host/manage-bookings'
+    | '/host/manage-listings'
+    | '/space/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
-  CitizenRoute: typeof CitizenRoute
+  AddSpaceRoute: typeof AddSpaceRoute
+  AiPricingRoute: typeof AiPricingRoute
+  AiRecommendationsRoute: typeof AiRecommendationsRoute
+  BrowseRoute: typeof BrowseRoute
   ContactRoute: typeof ContactRoute
-  ContractorRoute: typeof ContractorRoute
   DashboardRoute: typeof DashboardRoute
-  GovernmentRoute: typeof GovernmentRoute
-  ImpactRoute: typeof ImpactRoute
-  ProblemRoute: typeof ProblemRoute
+  FaqRoute: typeof FaqRoute
+  LoginRoute: typeof LoginRoute
+  NotificationsRoute: typeof NotificationsRoute
+  PrivacyRoute: typeof PrivacyRoute
+  ProfileRoute: typeof ProfileRoute
+  SignupRoute: typeof SignupRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  SolutionRoute: typeof SolutionRoute
-  TechnologyRoute: typeof TechnologyRoute
-  WorkflowRoute: typeof WorkflowRoute
+  TermsRoute: typeof TermsRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
+  BookingConfirmedIdRoute: typeof BookingConfirmedIdRoute
+  BookingIdRoute: typeof BookingIdRoute
+  HostDashboardRoute: typeof HostDashboardRoute
+  HostEarningsRoute: typeof HostEarningsRoute
+  HostManageBookingsRoute: typeof HostManageBookingsRoute
+  HostManageListingsRoute: typeof HostManageListingsRoute
+  SpaceIdRoute: typeof SpaceIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -215,11 +358,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AboutRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/citizen': {
-      id: '/citizen'
-      path: '/citizen'
-      fullPath: '/citizen'
-      preLoaderRoute: typeof CitizenRouteImport
+    '/add-space': {
+      id: '/add-space'
+      path: '/add-space'
+      fullPath: '/add-space'
+      preLoaderRoute: typeof AddSpaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-pricing': {
+      id: '/ai-pricing'
+      path: '/ai-pricing'
+      fullPath: '/ai-pricing'
+      preLoaderRoute: typeof AiPricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ai-recommendations': {
+      id: '/ai-recommendations'
+      path: '/ai-recommendations'
+      fullPath: '/ai-recommendations'
+      preLoaderRoute: typeof AiRecommendationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/browse': {
+      id: '/browse'
+      path: '/browse'
+      fullPath: '/browse'
+      preLoaderRoute: typeof BrowseRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/contact': {
@@ -229,13 +393,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ContactRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/contractor': {
-      id: '/contractor'
-      path: '/contractor'
-      fullPath: '/contractor'
-      preLoaderRoute: typeof ContractorRouteImport
-      parentRoute: typeof rootRouteImport
-    }
     '/dashboard': {
       id: '/dashboard'
       path: '/dashboard'
@@ -243,25 +400,46 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/government': {
-      id: '/government'
-      path: '/government'
-      fullPath: '/government'
-      preLoaderRoute: typeof GovernmentRouteImport
+    '/faq': {
+      id: '/faq'
+      path: '/faq'
+      fullPath: '/faq'
+      preLoaderRoute: typeof FaqRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/impact': {
-      id: '/impact'
-      path: '/impact'
-      fullPath: '/impact'
-      preLoaderRoute: typeof ImpactRouteImport
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/problem': {
-      id: '/problem'
-      path: '/problem'
-      fullPath: '/problem'
-      preLoaderRoute: typeof ProblemRouteImport
+    '/notifications': {
+      id: '/notifications'
+      path: '/notifications'
+      fullPath: '/notifications'
+      preLoaderRoute: typeof NotificationsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/privacy': {
+      id: '/privacy'
+      path: '/privacy'
+      fullPath: '/privacy'
+      preLoaderRoute: typeof PrivacyRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/signup': {
+      id: '/signup'
+      path: '/signup'
+      fullPath: '/signup'
+      preLoaderRoute: typeof SignupRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/sitemap.xml': {
@@ -271,25 +449,67 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/solution': {
-      id: '/solution'
-      path: '/solution'
-      fullPath: '/solution'
-      preLoaderRoute: typeof SolutionRouteImport
+    '/terms': {
+      id: '/terms'
+      path: '/terms'
+      fullPath: '/terms'
+      preLoaderRoute: typeof TermsRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/technology': {
-      id: '/technology'
-      path: '/technology'
-      fullPath: '/technology'
-      preLoaderRoute: typeof TechnologyRouteImport
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/workflow': {
-      id: '/workflow'
-      path: '/workflow'
-      fullPath: '/workflow'
-      preLoaderRoute: typeof WorkflowRouteImport
+    '/booking-confirmed/$id': {
+      id: '/booking-confirmed/$id'
+      path: '/booking-confirmed/$id'
+      fullPath: '/booking-confirmed/$id'
+      preLoaderRoute: typeof BookingConfirmedIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/booking/$id': {
+      id: '/booking/$id'
+      path: '/booking/$id'
+      fullPath: '/booking/$id'
+      preLoaderRoute: typeof BookingIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/host/dashboard': {
+      id: '/host/dashboard'
+      path: '/host/dashboard'
+      fullPath: '/host/dashboard'
+      preLoaderRoute: typeof HostDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/host/earnings': {
+      id: '/host/earnings'
+      path: '/host/earnings'
+      fullPath: '/host/earnings'
+      preLoaderRoute: typeof HostEarningsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/host/manage-bookings': {
+      id: '/host/manage-bookings'
+      path: '/host/manage-bookings'
+      fullPath: '/host/manage-bookings'
+      preLoaderRoute: typeof HostManageBookingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/host/manage-listings': {
+      id: '/host/manage-listings'
+      path: '/host/manage-listings'
+      fullPath: '/host/manage-listings'
+      preLoaderRoute: typeof HostManageListingsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/space/$id': {
+      id: '/space/$id'
+      path: '/space/$id'
+      fullPath: '/space/$id'
+      preLoaderRoute: typeof SpaceIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
@@ -298,17 +518,28 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
-  CitizenRoute: CitizenRoute,
+  AddSpaceRoute: AddSpaceRoute,
+  AiPricingRoute: AiPricingRoute,
+  AiRecommendationsRoute: AiRecommendationsRoute,
+  BrowseRoute: BrowseRoute,
   ContactRoute: ContactRoute,
-  ContractorRoute: ContractorRoute,
   DashboardRoute: DashboardRoute,
-  GovernmentRoute: GovernmentRoute,
-  ImpactRoute: ImpactRoute,
-  ProblemRoute: ProblemRoute,
+  FaqRoute: FaqRoute,
+  LoginRoute: LoginRoute,
+  NotificationsRoute: NotificationsRoute,
+  PrivacyRoute: PrivacyRoute,
+  ProfileRoute: ProfileRoute,
+  SignupRoute: SignupRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  SolutionRoute: SolutionRoute,
-  TechnologyRoute: TechnologyRoute,
-  WorkflowRoute: WorkflowRoute,
+  TermsRoute: TermsRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
+  BookingConfirmedIdRoute: BookingConfirmedIdRoute,
+  BookingIdRoute: BookingIdRoute,
+  HostDashboardRoute: HostDashboardRoute,
+  HostEarningsRoute: HostEarningsRoute,
+  HostManageBookingsRoute: HostManageBookingsRoute,
+  HostManageListingsRoute: HostManageListingsRoute,
+  SpaceIdRoute: SpaceIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

@@ -15,17 +15,32 @@ function record(error: unknown) {
 const CAUSE_DEPTH_LIMIT = 5;
 const DESCRIPTION_LENGTH_LIMIT = 8_000;
 
+function sanitizePii(str: string): string {
+  if (!str) return str;
+  return str
+    // Redact Bearer tokens
+    .replace(/Bearer\s+[a-zA-Z0-9_\-\.]+/gi, "Bearer [REDACTED_TOKEN]")
+    // Redact JWTs
+    .replace(/eyJ[a-zA-Z0-9_\-]{10,}\.[a-zA-Z0-9_\-]{10,}\.[a-zA-Z0-9_\-]*/g, "[REDACTED_JWT]")
+    // Redact password fields in JSON or URL query strings
+    .replace(/(["']?password["']?\s*[:=]\s*["']?)([^"'&\s,]+)(["']?)/gi, '$1[REDACTED]$3')
+    // Redact email addresses
+    .replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, "[REDACTED_EMAIL]");
+}
+
 export function describeError(error: unknown): string {
   const parts: string[] = [];
   let current: unknown = error;
   for (let depth = 0; depth < CAUSE_DEPTH_LIMIT && current != null; depth++) {
     if (!(current instanceof Error)) {
-      parts.push(typeof current === "string" ? current : safeStringify(current));
+      parts.push(typeof current === "string" ? sanitizePii(current) : safeStringify(current));
       break;
     }
     const label = depth === 0 ? "" : "caused by: ";
     const status = describeStatus(current);
-    parts.push(`${label}${current.stack ?? `${current.name}: ${current.message}`}${status}`);
+    const sanitizedMsg = sanitizePii(current.message);
+    const sanitizedStack = current.stack ? sanitizePii(current.stack) : undefined;
+    parts.push(`${label}${sanitizedStack ?? `${current.name}: ${sanitizedMsg}`}${status}`);
     current = current.cause;
   }
   return parts.join("\n").slice(0, DESCRIPTION_LENGTH_LIMIT);
@@ -39,9 +54,9 @@ function describeStatus(error: Error): string {
 
 function safeStringify(value: unknown): string {
   try {
-    return JSON.stringify(value) ?? String(value);
+    return sanitizePii(JSON.stringify(value) ?? String(value));
   } catch {
-    return String(value);
+    return sanitizePii(String(value));
   }
 }
 

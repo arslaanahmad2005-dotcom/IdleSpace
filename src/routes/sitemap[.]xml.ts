@@ -1,7 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
+import { SPACES } from "@/lib/dummy-data";
 
-// TODO: replace with your project URL once a project name or custom domain is set.
 const BASE_URL = "";
 
 interface SitemapEntry {
@@ -16,17 +16,18 @@ export const Route = createFileRoute("/sitemap.xml")({
       GET: async () => {
         const entries: SitemapEntry[] = [
           { path: "/", changefreq: "weekly", priority: "1.0" },
-          { path: "/about", changefreq: "monthly", priority: "0.8" },
-          { path: "/problem", changefreq: "monthly", priority: "0.7" },
-          { path: "/solution", changefreq: "monthly", priority: "0.8" },
-          { path: "/dashboard", changefreq: "daily", priority: "0.9" },
-          { path: "/government", changefreq: "monthly", priority: "0.6" },
-          { path: "/contractor", changefreq: "monthly", priority: "0.6" },
-          { path: "/citizen", changefreq: "weekly", priority: "0.8" },
-          { path: "/workflow", changefreq: "monthly", priority: "0.7" },
-          { path: "/technology", changefreq: "monthly", priority: "0.6" },
-          { path: "/impact", changefreq: "monthly", priority: "0.6" },
-          { path: "/contact", changefreq: "yearly", priority: "0.5" },
+          { path: "/browse", changefreq: "daily", priority: "0.9" },
+          { path: "/ai-recommendations", changefreq: "daily", priority: "0.8" },
+          { path: "/ai-pricing", changefreq: "weekly", priority: "0.7" },
+          { path: "/about", changefreq: "monthly", priority: "0.6" },
+          { path: "/contact", changefreq: "monthly", priority: "0.6" },
+          { path: "/faq", changefreq: "monthly", priority: "0.6" },
+          { path: "/privacy", changefreq: "yearly", priority: "0.3" },
+          { path: "/terms", changefreq: "yearly", priority: "0.3" },
+          { path: "/login", changefreq: "yearly", priority: "0.4" },
+          { path: "/signup", changefreq: "yearly", priority: "0.4" },
+          { path: "/add-space", changefreq: "monthly", priority: "0.7" },
+          ...SPACES.map((s) => ({ path: `/space/${s.id}`, changefreq: "weekly" as const, priority: "0.8" })),
         ];
 
         const urls = entries.map((e) =>
@@ -36,9 +37,7 @@ export const Route = createFileRoute("/sitemap.xml")({
             e.changefreq ? `    <changefreq>${e.changefreq}</changefreq>` : null,
             e.priority ? `    <priority>${e.priority}</priority>` : null,
             `  </url>`,
-          ]
-            .filter(Boolean)
-            .join("\n"),
+          ].filter(Boolean).join("\n"),
         );
 
         const xml = [

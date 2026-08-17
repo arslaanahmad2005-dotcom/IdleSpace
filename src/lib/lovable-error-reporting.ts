@@ -23,14 +23,30 @@ declare global {
   }
 }
 
+function sanitizePii(str?: string): string | undefined {
+  if (!str) return str;
+  return str
+    .replace(/Bearer\s+[a-zA-Z0-9_\-\.]+/gi, "Bearer [REDACTED_TOKEN]")
+    .replace(/eyJ[a-zA-Z0-9_\-]{10,}\.[a-zA-Z0-9_\-]{10,}\.[a-zA-Z0-9_\-]*/g, "[REDACTED_JWT]")
+    .replace(/(["']?password["']?\s*[:=]\s*["']?)([^"'&\s,]+)(["']?)/gi, '$1[REDACTED]$3')
+    .replace(/[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}/g, "[REDACTED_EMAIL]");
+}
+
 export function reportLovableError(error: unknown, context: Record<string, unknown> = {}) {
   if (typeof window === "undefined") return;
+
+  // Sanitize context object
+  const sanitizedContext: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(context)) {
+    sanitizedContext[k] = typeof v === "string" ? sanitizePii(v) : v;
+  }
+
   window.__lovableEvents?.captureException?.(
     error,
     {
       source: "react_error_boundary",
       route: window.location.pathname,
-      ...context,
+      ...sanitizedContext,
     },
     {
       mechanism: "react_error_boundary",
@@ -43,15 +59,18 @@ export function reportLovableError(error: unknown, context: Record<string, unkno
   // which is present only inside the editor preview.
   // Loaders and server fns commonly throw a raw Response; String(it) is the
   // opaque "[object Response]", so pull out the status and URL instead.
-  const message =
+  const rawMessage =
     error instanceof Response
       ? `Response ${error.status}${error.url ? ` at ${error.url}` : ""}`
       : error instanceof Error
         ? error.message
         : String(error);
+  const message = sanitizePii(rawMessage) ?? "An error occurred";
+  const stack = error instanceof Error ? sanitizePii(error.stack) : undefined;
+
   window.__lovableReportRuntimeError?.({
     message,
-    stack: error instanceof Error ? error.stack : undefined,
+    stack,
     filename: window.location.pathname,
   });
 }

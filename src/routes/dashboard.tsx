@@ -1,100 +1,160 @@
-import { createFileRoute } from "@tanstack/react-router";
-import { Activity, CheckCircle2, ClipboardList, Hourglass, Lock, Wallet } from "lucide-react";
-import { Counter, GlassCard, PageHeader, Reveal, SectionHeading } from "@/components/Primitives";
-import ProjectTable from "@/components/ProjectTable";
-import { CompletionChart, DepartmentChart, MonthlyReleaseChart, StateSpendChart } from "@/components/Charts";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { Bell, Wallet, Heart, TrendingUp, Calendar, MoreHorizontal } from "lucide-react";
+import {
+  Area, AreaChart, ResponsiveContainer, Tooltip, XAxis, YAxis, CartesianGrid,
+} from "recharts";
+import { SiteLayout } from "@/components/site-layout";
+import { ProtectedRoute } from "@/components/protected-route";
+import { Button } from "@/components/ui/button";
+import { BOOKINGS, NOTIFICATIONS, REVENUE_DATA, SPACES } from "@/lib/dummy-data";
+import { formatCurrency } from "@/lib/utils";
+import { useAuth } from "@/hooks/use-auth";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
     meta: [
-      { title: "Public Transparency Dashboard | JanSamarth Chain" },
-      {
-        name: "description",
-        content:
-          "Live-style analytics on public project budgets, released funds, department distribution and completion rates using demonstration data.",
-      },
-      { property: "og:title", content: "Public Transparency Dashboard" },
-      { property: "og:description", content: "Funds locked, funds released and project progress at a glance." },
+      { title: "Your dashboard — IdleSpace" },
+      { name: "description", content: "Manage your bookings, wishlists and notifications on IdleSpace." },
+      { property: "og:title", content: "Your dashboard — IdleSpace" },
+      { property: "og:description", content: "Bookings, wishlists and more." },
     ],
   }),
-  component: DashboardPage,
+  component: Dashboard,
 });
 
-const widgets = [
-  { icon: ClipboardList, label: "Total Projects", value: 1284, suffix: "" },
-  { icon: Activity, label: "Active Projects", value: 526, suffix: "" },
-  { icon: Wallet, label: "Funds Released", value: 2984, prefix: "₹", suffix: " Cr" },
-  { icon: Lock, label: "Funds Locked", value: 1836, prefix: "₹", suffix: " Cr" },
-  { icon: CheckCircle2, label: "Completed Projects", value: 488, suffix: "" },
-  { icon: Hourglass, label: "Pending Verification", value: 174, suffix: "" },
-];
-
-function DashboardPage() {
+function Dashboard() {
+  const { user } = useAuth();
+  const displayName =
+    (user?.user_metadata?.full_name as string | undefined)?.split(" ")[0] ??
+    user?.email?.split("@")[0] ??
+    "there";
+  const upcoming = BOOKINGS.filter((b) => b.status === "upcoming");
+  const past = BOOKINGS.filter((b) => b.status !== "upcoming");
   return (
-    <div>
-      <PageHeader
-        eyebrow="Public dashboard"
-        title="Every rupee, visible to everyone"
-        description="A department-agnostic view of sanctioned budgets, escrow balances and verified disbursements. All values shown are demonstration data."
-      />
+    <ProtectedRoute>
+    <SiteLayout>
+      <div className="mx-auto max-w-7xl px-4 py-8">
+        <div className="flex flex-wrap items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-bold tracking-tight">Welcome back, {displayName}</h1>
+            <p className="text-muted-foreground mt-1">Here's what's happening with your bookings.</p>
+          </div>
+          <Link to="/browse"><Button className="gradient-primary text-white shadow-elegant">Find a space</Button></Link>
+        </div>
 
-      <section className="mx-auto max-w-7xl px-5 py-6">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {widgets.map((w, i) => (
-            <Reveal key={w.label} delay={i * 0.05}>
-              <GlassCard className="h-full">
-                <div className="flex items-center justify-between gap-4">
-                  <span className="text-sm text-muted-foreground">{w.label}</span>
-                  <w.icon className="h-5 w-5 shrink-0 text-info" />
-                </div>
-                <p className="mt-4 font-display text-3xl font-bold">
-                  <Counter value={w.value} prefix={w.prefix} suffix={w.suffix} />
-                </p>
-              </GlassCard>
-            </Reveal>
+        <div className="mt-8 grid grid-cols-2 lg:grid-cols-4 gap-4">
+          {[
+            { label: "Upcoming", value: upcoming.length, icon: Calendar, color: "text-primary" },
+            { label: "Saved", value: 12, icon: Heart, color: "text-destructive" },
+            { label: "Wallet", value: formatCurrency(20000), icon: Wallet, color: "text-success" },
+            { label: "Hours booked", value: 48, icon: TrendingUp, color: "text-accent" },
+          ].map((s) => (
+            <div key={s.label} className="rounded-2xl bg-card border border-border p-5 hover-lift">
+              <div className="flex items-center justify-between">
+                <s.icon className={`h-5 w-5 ${s.color}`} />
+                <MoreHorizontal className="h-4 w-4 text-muted-foreground" />
+              </div>
+              <div className="mt-4 text-2xl font-bold">{s.value}</div>
+              <div className="text-xs text-muted-foreground">{s.label}</div>
+            </div>
           ))}
         </div>
-      </section>
 
-      <section className="mx-auto max-w-7xl px-5 py-8">
-        <div className="grid gap-5 lg:grid-cols-2">
-          <Reveal>
-            <GlassCard hover={false}>
-              <h3 className="text-base font-semibold">Monthly fund release (₹ Cr)</h3>
-              <p className="mb-4 text-xs text-muted-foreground">Released vs still locked in escrow</p>
-              <MonthlyReleaseChart />
-            </GlassCard>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <GlassCard hover={false}>
-              <h3 className="text-base font-semibold">Department-wise projects</h3>
-              <p className="mb-4 text-xs text-muted-foreground">Active engagements per department</p>
-              <DepartmentChart />
-            </GlassCard>
-          </Reveal>
-          <Reveal>
-            <GlassCard hover={false}>
-              <h3 className="text-base font-semibold">Completion rate</h3>
-              <p className="mb-4 text-xs text-muted-foreground">Share of projects by lifecycle status</p>
-              <CompletionChart />
-            </GlassCard>
-          </Reveal>
-          <Reveal delay={0.08}>
-            <GlassCard hover={false}>
-              <h3 className="text-base font-semibold">State-wise spending (₹ Cr)</h3>
-              <p className="mb-4 text-xs text-muted-foreground">Top seven states by disbursement</p>
-              <StateSpendChart />
-            </GlassCard>
-          </Reveal>
-        </div>
-      </section>
+        <div className="mt-8 grid lg:grid-cols-[minmax(0,1fr)_360px] gap-6">
+          <div>
+            <div className="rounded-3xl bg-card border border-border p-6">
+              <h2 className="text-lg font-semibold">Activity</h2>
+              <div className="mt-4 h-56">
+                <ResponsiveContainer width="100%" height="100%">
+                  <AreaChart data={REVENUE_DATA}>
+                    <defs>
+                      <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="0%" stopColor="var(--color-primary)" stopOpacity={0.35} />
+                        <stop offset="100%" stopColor="var(--color-primary)" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
+                    <XAxis dataKey="month" stroke="var(--color-muted-foreground)" fontSize={12} />
+                    <YAxis stroke="var(--color-muted-foreground)" fontSize={12} />
+                    <Tooltip contentStyle={{ background: "var(--color-card)", border: "1px solid var(--color-border)", borderRadius: 12 }} />
+                    <Area type="monotone" dataKey="bookings" stroke="var(--color-primary)" strokeWidth={2} fill="url(#g1)" />
+                  </AreaChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
 
-      <section className="mx-auto max-w-7xl px-5 py-10">
-        <SectionHeading center={false} eyebrow="Project register" title="Search the public project ledger" />
-        <div className="mt-8">
-          <ProjectTable />
+            <div className="mt-6 rounded-3xl bg-card border border-border p-6">
+              <div className="flex items-center justify-between">
+                <h2 className="text-lg font-semibold">Upcoming bookings</h2>
+                <Link to="/dashboard" className="text-sm text-primary">View all</Link>
+              </div>
+              <div className="mt-4 space-y-3">
+                {upcoming.map((b) => (
+                  <div key={b.id} className="grid grid-cols-[64px_minmax(0,1fr)_auto] gap-4 items-center p-3 rounded-2xl bg-secondary/50">
+                    <img src={b.image} alt="" className="h-16 w-16 rounded-xl object-cover" />
+                    <div className="min-w-0">
+                      <div className="font-semibold truncate">{b.space}</div>
+                      <div className="text-xs text-muted-foreground">{b.date} · {b.time}</div>
+                    </div>
+                    <div className="text-right shrink-0">
+                      <div className="font-semibold">{formatCurrency(b.total)}</div>
+                      <div className="text-xs text-success">Confirmed</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="mt-6 rounded-3xl bg-card border border-border p-6">
+              <h2 className="text-lg font-semibold">Booking history</h2>
+              <div className="mt-4 space-y-3">
+                {past.map((b) => (
+                  <div key={b.id} className="grid grid-cols-[64px_minmax(0,1fr)_auto] gap-4 items-center p-3 rounded-2xl">
+                    <img src={b.image} alt="" className="h-16 w-16 rounded-xl object-cover" />
+                    <div className="min-w-0">
+                      <div className="font-semibold truncate">{b.space}</div>
+                      <div className="text-xs text-muted-foreground">{b.date} · {b.time}</div>
+                    </div>
+                    <span className={`text-xs px-2 py-1 rounded-full shrink-0 ${b.status === "completed" ? "bg-success/10 text-success" : "bg-destructive/10 text-destructive"}`}>
+                      {b.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <aside className="space-y-6">
+            <div className="rounded-3xl bg-card border border-border p-6">
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold flex items-center gap-2"><Bell className="h-4 w-4" /> Notifications</h3>
+                <Link to="/notifications" className="text-xs text-primary">All</Link>
+              </div>
+              <div className="mt-3 space-y-2">
+                {NOTIFICATIONS.slice(0, 3).map((n) => (
+                  <div key={n.id} className="p-3 rounded-xl bg-secondary/50">
+                    <div className="text-sm font-semibold">{n.title}</div>
+                    <div className="text-xs text-muted-foreground">{n.body}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-3xl bg-card border border-border p-6">
+              <h3 className="font-semibold flex items-center gap-2"><Heart className="h-4 w-4" /> Saved spaces</h3>
+              <div className="mt-3 grid grid-cols-2 gap-2">
+                {SPACES.slice(0, 4).map((s) => (
+                  <Link to="/space/$id" params={{ id: s.id }} key={s.id} className="block">
+                    <img src={s.image} alt="" className="aspect-square rounded-xl object-cover w-full" />
+                    <div className="mt-1 text-xs truncate font-medium">{s.title}</div>
+                  </Link>
+                ))}
+              </div>
+            </div>
+          </aside>
         </div>
-      </section>
-    </div>
+      </div>
+    </SiteLayout>
+    </ProtectedRoute>
   );
 }
