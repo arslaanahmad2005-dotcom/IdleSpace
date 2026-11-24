@@ -1,11 +1,26 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { CreditCard, Mail, Phone, MapPin, Camera, Star, Loader2, Download, Trash2 } from "lucide-react";
+import {
+  CreditCard,
+  Mail,
+  Phone,
+  MapPin,
+  Camera,
+  Star,
+  Loader2,
+  Download,
+  Trash2,
+  Building2,
+  User,
+  ShieldCheck,
+  CheckCircle2,
+} from "lucide-react";
 import { SiteLayout, PageHeader } from "@/components/site-layout";
 import { ProtectedRoute } from "@/components/protected-route";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -17,16 +32,18 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
-import { REVIEWS } from "@/lib/dummy-data";
 import { useAuth } from "@/hooks/use-auth";
-import { supabase } from "@/lib/supabase";
+import type { UserRole } from "@/lib/store";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/profile")({
   head: () => ({
     meta: [
       { title: "Your profile — IdleSpace" },
-      { name: "description", content: "Manage your personal info, payment methods and reviews." },
+      {
+        name: "description",
+        content: "Manage your personal info, account roles and preferences.",
+      },
       { property: "og:title", content: "Your profile — IdleSpace" },
       { property: "og:description", content: "Your IdleSpace profile." },
     ],
@@ -34,37 +51,40 @@ export const Route = createFileRoute("/profile")({
   component: Profile,
 });
 
+const AVATAR_PRESETS = [
+  "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80",
+  "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=200&q=80",
+  "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80",
+  "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80",
+  "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=200&q=80",
+];
+
 function Profile() {
-  const { user, signOut } = useAuth();
+  const { user, appUser, updateProfile, switchRole, signOut } = useAuth();
   const navigate = useNavigate();
-  const meta = user?.user_metadata ?? {};
-  const [fullName, setFullName] = useState((meta.full_name as string) ?? "");
-  const [phone, setPhone] = useState((meta.phone as string) ?? "");
-  const [city, setCity] = useState((meta.city as string) ?? "");
+
+  const [fullName, setFullName] = useState(appUser?.fullName || user?.user_metadata?.full_name || "");
+  const [phone, setPhone] = useState(appUser?.phone || user?.user_metadata?.phone || "");
+  const [city, setCity] = useState(appUser?.city || user?.user_metadata?.city || "Mumbai, Maharashtra");
+  const [bio, setBio] = useState(appUser?.bio || "");
+  const [avatar, setAvatar] = useState(appUser?.avatar || AVATAR_PRESETS[0]);
+  const [role, setRole] = useState<UserRole>(appUser?.role || "booker");
+
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState(false);
 
-  const userEmail = user?.email ?? "";
-  const initials =
-    fullName
-      ?.split(" ")
-      .map((w: string) => w[0])
-      .join("")
-      .slice(0, 2)
-      .toUpperCase() ??
-    userEmail.slice(0, 2).toUpperCase();
-
-  const handleSave = async () => {
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
     setSaving(true);
-    const { error } = await supabase.auth.updateUser({
-      data: { full_name: fullName, phone, city },
+    await updateProfile({
+      fullName: fullName.trim(),
+      phone: phone.trim(),
+      city: city.trim(),
+      bio: bio.trim(),
+      avatar,
+      role,
     });
     setSaving(false);
-    if (error) {
-      toast.error(error.message);
-    } else {
-      toast.success("Profile updated!");
-    }
   };
 
   const handleExportData = () => {
@@ -74,174 +94,269 @@ function Profile() {
       fullName,
       phone,
       city,
-      createdAt: user?.created_at,
-      lastSignInAt: user?.last_sign_in_at,
+      bio,
+      role,
+      avatar,
       exportedAt: new Date().toISOString(),
     };
-    const blob = new Blob([JSON.stringify(exportPayload, null, 2)], { type: "application/json" });
+    const blob = new Blob([JSON.stringify(exportPayload, null, 2)], {
+      type: "application/json",
+    });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = `idlespace-personal-data-${user?.id ?? "export"}.json`;
+    a.download = `idlespace-profile-archive-${user?.id || "data"}.json`;
     a.click();
     URL.revokeObjectURL(url);
-    toast.success("Personal data archive downloaded.");
+    toast.success("Profile data archive downloaded.");
   };
 
   const handleDeleteAccount = async () => {
     setDeleting(true);
-    // Anonymize/wipe user metadata
-    await supabase.auth.updateUser({
-      data: { full_name: null, phone: null, city: null, deleted_at: new Date().toISOString() },
-    });
     await signOut();
     setDeleting(false);
-    toast.success("Account and personal data have been removed.");
+    toast.success("Account and session wiped.");
     navigate({ to: "/" });
   };
 
   return (
     <ProtectedRoute>
-    <SiteLayout>
-      <PageHeader eyebrow="Profile" title="Your profile" subtitle="Personal info, payment methods and reviews." />
-      <div className="mx-auto max-w-5xl px-4 pb-16">
-        <div className="grid lg:grid-cols-[280px_minmax(0,1fr)] gap-8">
-          <div className="rounded-3xl bg-card border border-border p-6 text-center h-fit">
-            <div className="relative mx-auto w-28 h-28">
-              <div className="h-28 w-28 rounded-full gradient-primary grid place-items-center text-white text-2xl font-bold">
-                {initials}
+      <SiteLayout>
+        <PageHeader
+          eyebrow="Account Settings"
+          title="Personal Profile"
+          subtitle="Manage your identity, role permissions, and notification preferences."
+        />
+
+        <div className="mx-auto max-w-4xl px-4 pb-24">
+          <form onSubmit={handleSave} className="space-y-8">
+            {/* Avatar & Persona Card */}
+            <div className="p-6 md:p-8 rounded-3xl bg-card border border-border shadow-soft flex flex-col sm:flex-row items-center gap-6">
+              <div className="relative group">
+                <img
+                  src={avatar}
+                  alt={fullName}
+                  className="h-24 w-24 rounded-full object-cover ring-4 ring-primary/20 shadow-md"
+                />
               </div>
-              <button className="absolute bottom-0 right-0 h-8 w-8 rounded-full gradient-primary grid place-items-center text-white shadow-elegant">
-                <Camera className="h-4 w-4" />
-              </button>
+
+              <div className="space-y-2 text-center sm:text-left flex-1">
+                <div className="flex flex-wrap items-center gap-2 justify-center sm:justify-start">
+                  <h2 className="text-2xl font-bold text-foreground">{fullName || "Your Name"}</h2>
+                  <span className="text-xs font-bold uppercase tracking-wider gradient-primary text-white px-2.5 py-0.5 rounded-full">
+                    {role}
+                  </span>
+                </div>
+                <p className="text-xs text-muted-foreground">{user?.email}</p>
+
+                {/* Choose Avatar Preset */}
+                <div className="pt-2">
+                  <span className="text-xs text-muted-foreground block mb-1.5">Choose Avatar:</span>
+                  <div className="flex items-center gap-2 justify-center sm:justify-start">
+                    {AVATAR_PRESETS.map((preset, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        onClick={() => setAvatar(preset)}
+                        className={`h-9 w-9 rounded-full overflow-hidden border-2 transition-all ${
+                          avatar === preset ? "border-primary scale-110 shadow-sm" : "border-transparent opacity-60"
+                        }`}
+                      >
+                        <img src={preset} alt="" className="h-full w-full object-cover" />
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
-            <h2 className="mt-4 text-lg font-semibold">{fullName || "User"}</h2>
-            <p className="text-sm text-muted-foreground">{userEmail}</p>
-            <div className="mt-4 flex items-center justify-center gap-1 text-sm">
-              <Star className="h-4 w-4 fill-warning text-warning" /> 4.9 · 23 reviews
+
+            {/* Role Permissions Selection */}
+            <div className="p-6 md:p-8 rounded-3xl bg-card border border-border shadow-soft space-y-4">
+              <div>
+                <h3 className="font-bold text-lg">Account Mode & Role</h3>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Select your primary platform experience. You can switch personas anytime.
+                </p>
+              </div>
+
+              <div className="grid sm:grid-cols-3 gap-3">
+                <button
+                  type="button"
+                  onClick={() => setRole("booker")}
+                  className={`p-4 rounded-2xl border text-left transition-all ${
+                    role === "booker"
+                      ? "border-primary bg-primary/5 ring-1 ring-primary shadow-sm"
+                      : "border-border hover:bg-secondary"
+                  }`}
+                >
+                  <User className="h-5 w-5 text-primary mb-2" />
+                  <div className="font-bold text-sm">Booker Persona</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">
+                    Browse spaces, book hourly, leave reviews.
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setRole("host")}
+                  className={`p-4 rounded-2xl border text-left transition-all ${
+                    role === "host"
+                      ? "border-primary bg-primary/5 ring-1 ring-primary shadow-sm"
+                      : "border-border hover:bg-secondary"
+                  }`}
+                >
+                  <Building2 className="h-5 w-5 text-accent mb-2" />
+                  <div className="font-bold text-sm">Host Persona</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">
+                    List unused spaces, approve requests, earn payouts.
+                  </div>
+                </button>
+
+                <button
+                  type="button"
+                  onClick={() => setRole("admin")}
+                  className={`p-4 rounded-2xl border text-left transition-all ${
+                    role === "admin"
+                      ? "border-primary bg-primary/5 ring-1 ring-primary shadow-sm"
+                      : "border-border hover:bg-secondary"
+                  }`}
+                >
+                  <ShieldCheck className="h-5 w-5 text-emerald-500 mb-2" />
+                  <div className="font-bold text-sm">Admin Persona</div>
+                  <div className="text-xs text-muted-foreground mt-0.5">
+                    Moderate listings, view platform metrics.
+                  </div>
+                </button>
+              </div>
             </div>
-          </div>
 
-          <div className="space-y-6">
-            <section className="rounded-3xl bg-card border border-border p-6">
-              <h3 className="font-semibold">Personal information</h3>
-              <div className="mt-4 grid sm:grid-cols-2 gap-4">
-                <div><Label>Full name</Label><Input value={fullName} onChange={(e) => setFullName(e.target.value)} className="mt-1.5 rounded-xl" /></div>
-                <div><Label>Email</Label><Input value={userEmail} disabled className="mt-1.5 rounded-xl opacity-60" /></div>
-                <div><Label>Phone</Label><Input value={phone} onChange={(e) => setPhone(e.target.value)} className="mt-1.5 rounded-xl" /></div>
-                <div><Label>City</Label><Input value={city} onChange={(e) => setCity(e.target.value)} className="mt-1.5 rounded-xl" /></div>
+            {/* Profile Fields */}
+            <div className="p-6 md:p-8 rounded-3xl bg-card border border-border shadow-soft space-y-4">
+              <h3 className="font-bold text-lg">Contact Information</h3>
+
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="p-name">Full Name</Label>
+                  <Input
+                    id="p-name"
+                    value={fullName}
+                    onChange={(e) => setFullName(e.target.value)}
+                    className="mt-1.5 rounded-xl h-11"
+                    required
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="p-email">Email Address</Label>
+                  <Input
+                    id="p-email"
+                    value={user?.email || ""}
+                    disabled
+                    className="mt-1.5 rounded-xl h-11 bg-secondary/50 text-muted-foreground"
+                  />
+                </div>
               </div>
-              <div className="mt-4 flex gap-2">
-                <Button className="gradient-primary text-white" onClick={handleSave} disabled={saving}>
-                  {saving ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                  Save
+
+              <div className="grid sm:grid-cols-2 gap-4">
+                <div>
+                  <Label htmlFor="p-phone">Phone Number</Label>
+                  <Input
+                    id="p-phone"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                    className="mt-1.5 rounded-xl h-11"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="p-city">City & Region</Label>
+                  <Input
+                    id="p-city"
+                    value={city}
+                    onChange={(e) => setCity(e.target.value)}
+                    className="mt-1.5 rounded-xl h-11"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <Label htmlFor="p-bio">Bio / Business Description</Label>
+                <Textarea
+                  id="p-bio"
+                  value={bio}
+                  onChange={(e) => setBio(e.target.value)}
+                  placeholder="Share a short bio with hosts or guests..."
+                  className="mt-1.5 rounded-xl min-h-24"
+                />
+              </div>
+
+              <div className="pt-2 flex justify-end">
+                <Button
+                  type="submit"
+                  disabled={saving}
+                  className="gradient-primary text-white shadow-elegant rounded-xl px-8"
+                >
+                  {saving ? (
+                    <>
+                      <Loader2 className="h-4 w-4 animate-spin mr-2" /> Saving Changes…
+                    </>
+                  ) : (
+                    "Save Profile"
+                  )}
                 </Button>
-                <Button variant="outline" onClick={() => { setFullName((meta.full_name as string) ?? ""); setPhone((meta.phone as string) ?? ""); setCity((meta.city as string) ?? ""); }}>Reset</Button>
               </div>
-            </section>
+            </div>
 
-            <section className="rounded-3xl bg-card border border-border p-6">
-              <h3 className="font-semibold">Payment methods</h3>
-              <div className="mt-4 space-y-2">
-                {[
-                  { brand: "Visa", last4: "4421", exp: "12/28" },
-                  { brand: "Mastercard", last4: "1187", exp: "09/27" },
-                ].map((c) => (
-                  <div key={c.last4} className="flex items-center justify-between p-4 rounded-2xl bg-secondary/50">
-                    <div className="flex items-center gap-3">
-                      <div className="h-10 w-14 rounded-lg gradient-primary grid place-items-center text-white text-xs font-bold">{c.brand[0]}</div>
-                      <div>
-                        <div className="text-sm font-semibold">{c.brand} •••• {c.last4}</div>
-                        <div className="text-xs text-muted-foreground">Expires {c.exp}</div>
-                      </div>
-                    </div>
-                    <Button variant="ghost" size="sm">Remove</Button>
-                  </div>
-                ))}
-                <Button variant="outline" className="w-full mt-2"><CreditCard className="h-4 w-4 mr-2" /> Add card</Button>
+            {/* Privacy & Account Operations */}
+            <div className="p-6 md:p-8 rounded-3xl bg-card border border-border shadow-soft flex flex-wrap items-center justify-between gap-4">
+              <div>
+                <h4 className="font-bold text-sm">Data Privacy & Archival</h4>
+                <p className="text-xs text-muted-foreground mt-0.5">
+                  Download a complete copy of your reservations, ratings, and profile settings.
+                </p>
               </div>
-            </section>
 
-            <section className="rounded-3xl bg-card border border-border p-6">
-              <h3 className="font-semibold">Your reviews</h3>
-              <div className="mt-4 space-y-3">
-                {REVIEWS.map((r) => (
-                  <div key={r.id} className="p-4 rounded-2xl bg-secondary/50">
-                    <div className="text-sm font-semibold">{r.author}</div>
-                    <div className="flex gap-0.5 text-warning mt-1">{Array.from({ length: r.rating }).map((_, i) => <Star key={i} className="h-3 w-3 fill-current" />)}</div>
-                    <p className="mt-2 text-sm text-muted-foreground">{r.body}</p>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            <section className="rounded-3xl bg-card border border-border p-6">
-              <h3 className="font-semibold">Settings</h3>
-              <div className="mt-4 space-y-3 text-sm">
-                {[
-                  { icon: Mail, label: "Email notifications", desc: "Booking updates and receipts" },
-                  { icon: Phone, label: "SMS alerts", desc: "Reminders and confirmations" },
-                  { icon: MapPin, label: "Location services", desc: "Get better recommendations" },
-                ].map((s) => (
-                  <div key={s.label} className="flex items-center justify-between p-3 rounded-xl hover:bg-secondary/50">
-                    <div className="flex items-center gap-3">
-                      <s.icon className="h-4 w-4 text-muted-foreground" />
-                      <div>
-                        <div className="font-medium">{s.label}</div>
-                        <div className="text-xs text-muted-foreground">{s.desc}</div>
-                      </div>
-                    </div>
-                    <div className="h-6 w-10 rounded-full gradient-primary p-0.5 flex items-center">
-                      <div className="h-5 w-5 rounded-full bg-white ml-auto" />
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </section>
-
-            {/* Privacy, Data Export & Deletion (GDPR / CCPA) */}
-            <section className="rounded-3xl bg-card border border-destructive/20 p-6">
-              <h3 className="font-semibold text-destructive">Privacy & Data Management</h3>
-              <p className="text-xs text-muted-foreground mt-1">
-                Export a copy of your personal data archive or request account deletion.
-              </p>
-              <div className="mt-4 flex flex-wrap items-center gap-3">
-                <Button variant="outline" className="rounded-xl text-xs" onClick={handleExportData}>
-                  <Download className="h-3.5 w-3.5 mr-2" /> Export my data
+              <div className="flex items-center gap-2">
+                <Button
+                  type="button"
+                  variant="outline"
+                  onClick={handleExportData}
+                  className="rounded-xl text-xs"
+                >
+                  <Download className="h-4 w-4 mr-1.5" /> Export Data
                 </Button>
-                
+
                 <AlertDialog>
                   <AlertDialogTrigger asChild>
-                    <Button variant="destructive" className="rounded-xl text-xs">
-                      <Trash2 className="h-3.5 w-3.5 mr-2" /> Delete account & personal data
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      className="rounded-xl text-xs text-destructive hover:bg-destructive/10"
+                    >
+                      <Trash2 className="h-4 w-4 mr-1.5" /> Delete Account
                     </Button>
                   </AlertDialogTrigger>
-                  <AlertDialogContent className="rounded-2xl">
+                  <AlertDialogContent>
                     <AlertDialogHeader>
-                      <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                      <AlertDialogTitle>Delete IdleSpace Account?</AlertDialogTitle>
                       <AlertDialogDescription>
-                        This action will anonymize your profile data, remove your phone number, city, and full name, and sign you out permanently.
+                        This will clear your local sessions and wipe personal profile data.
                       </AlertDialogDescription>
                     </AlertDialogHeader>
                     <AlertDialogFooter>
                       <AlertDialogCancel className="rounded-xl">Cancel</AlertDialogCancel>
                       <AlertDialogAction
                         onClick={handleDeleteAccount}
-                        className="bg-destructive text-destructive-foreground hover:bg-destructive/90 rounded-xl"
-                        disabled={deleting}
+                        className="rounded-xl bg-destructive text-white"
                       >
-                        {deleting ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
-                        Confirm Deletion
+                        Yes, Delete My Account
                       </AlertDialogAction>
                     </AlertDialogFooter>
                   </AlertDialogContent>
                 </AlertDialog>
               </div>
-            </section>
-          </div>
+            </div>
+          </form>
         </div>
-      </div>
-    </SiteLayout>
+      </SiteLayout>
     </ProtectedRoute>
   );
 }

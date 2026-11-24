@@ -12,12 +12,14 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AboutRouteImport } from './routes/about'
 import { Route as AddSpaceRouteImport } from './routes/add-space'
+import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AiPricingRouteImport } from './routes/ai-pricing'
 import { Route as AiRecommendationsRouteImport } from './routes/ai-recommendations'
 import { Route as BrowseRouteImport } from './routes/browse'
 import { Route as ContactRouteImport } from './routes/contact'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as FaqRouteImport } from './routes/faq'
+import { Route as FavouritesRouteImport } from './routes/favourites'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as NotificationsRouteImport } from './routes/notifications'
 import { Route as PrivacyRouteImport } from './routes/privacy'
@@ -28,6 +30,8 @@ import { Route as TermsRouteImport } from './routes/terms'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as BookingConfirmedIdRouteImport } from './routes/booking-confirmed.$id'
 import { Route as BookingIdRouteImport } from './routes/booking.$id'
+import { Route as EditSpaceIdRouteImport } from './routes/edit-space.$id'
+import { Route as HostCalendarRouteImport } from './routes/host.calendar'
 import { Route as HostDashboardRouteImport } from './routes/host.dashboard'
 import { Route as HostEarningsRouteImport } from './routes/host.earnings'
 import { Route as HostManageBookingsRouteImport } from './routes/host.manage-bookings'
@@ -47,6 +51,11 @@ const AboutRoute = AboutRouteImport.update({
 const AddSpaceRoute = AddSpaceRouteImport.update({
   id: '/add-space',
   path: '/add-space',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
   getParentRoute: () => rootRouteImport,
 } as any)
 const AiPricingRoute = AiPricingRouteImport.update({
@@ -77,6 +86,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const FaqRoute = FaqRouteImport.update({
   id: '/faq',
   path: '/faq',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FavouritesRoute = FavouritesRouteImport.update({
+  id: '/favourites',
+  path: '/favourites',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -129,6 +143,16 @@ const BookingIdRoute = BookingIdRouteImport.update({
   path: '/booking/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const EditSpaceIdRoute = EditSpaceIdRouteImport.update({
+  id: '/edit-space/$id',
+  path: '/edit-space/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const HostCalendarRoute = HostCalendarRouteImport.update({
+  id: '/host/calendar',
+  path: '/host/calendar',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const HostDashboardRoute = HostDashboardRouteImport.update({
   id: '/host/dashboard',
   path: '/host/dashboard',
@@ -159,12 +183,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/add-space': typeof AddSpaceRoute
+  '/admin': typeof AdminRoute
   '/ai-pricing': typeof AiPricingRoute
   '/ai-recommendations': typeof AiRecommendationsRoute
   '/browse': typeof BrowseRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
+  '/favourites': typeof FavouritesRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/privacy': typeof PrivacyRoute
@@ -175,6 +201,8 @@ export interface FileRoutesByFullPath {
   '/auth/callback': typeof AuthCallbackRoute
   '/booking-confirmed/$id': typeof BookingConfirmedIdRoute
   '/booking/$id': typeof BookingIdRoute
+  '/edit-space/$id': typeof EditSpaceIdRoute
+  '/host/calendar': typeof HostCalendarRoute
   '/host/dashboard': typeof HostDashboardRoute
   '/host/earnings': typeof HostEarningsRoute
   '/host/manage-bookings': typeof HostManageBookingsRoute
@@ -185,12 +213,14 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/add-space': typeof AddSpaceRoute
+  '/admin': typeof AdminRoute
   '/ai-pricing': typeof AiPricingRoute
   '/ai-recommendations': typeof AiRecommendationsRoute
   '/browse': typeof BrowseRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
+  '/favourites': typeof FavouritesRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/privacy': typeof PrivacyRoute
@@ -201,6 +231,8 @@ export interface FileRoutesByTo {
   '/auth/callback': typeof AuthCallbackRoute
   '/booking-confirmed/$id': typeof BookingConfirmedIdRoute
   '/booking/$id': typeof BookingIdRoute
+  '/edit-space/$id': typeof EditSpaceIdRoute
+  '/host/calendar': typeof HostCalendarRoute
   '/host/dashboard': typeof HostDashboardRoute
   '/host/earnings': typeof HostEarningsRoute
   '/host/manage-bookings': typeof HostManageBookingsRoute
@@ -212,12 +244,14 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/about': typeof AboutRoute
   '/add-space': typeof AddSpaceRoute
+  '/admin': typeof AdminRoute
   '/ai-pricing': typeof AiPricingRoute
   '/ai-recommendations': typeof AiRecommendationsRoute
   '/browse': typeof BrowseRoute
   '/contact': typeof ContactRoute
   '/dashboard': typeof DashboardRoute
   '/faq': typeof FaqRoute
+  '/favourites': typeof FavouritesRoute
   '/login': typeof LoginRoute
   '/notifications': typeof NotificationsRoute
   '/privacy': typeof PrivacyRoute
@@ -228,6 +262,8 @@ export interface FileRoutesById {
   '/auth/callback': typeof AuthCallbackRoute
   '/booking-confirmed/$id': typeof BookingConfirmedIdRoute
   '/booking/$id': typeof BookingIdRoute
+  '/edit-space/$id': typeof EditSpaceIdRoute
+  '/host/calendar': typeof HostCalendarRoute
   '/host/dashboard': typeof HostDashboardRoute
   '/host/earnings': typeof HostEarningsRoute
   '/host/manage-bookings': typeof HostManageBookingsRoute
@@ -240,12 +276,14 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/add-space'
+    | '/admin'
     | '/ai-pricing'
     | '/ai-recommendations'
     | '/browse'
     | '/contact'
     | '/dashboard'
     | '/faq'
+    | '/favourites'
     | '/login'
     | '/notifications'
     | '/privacy'
@@ -256,6 +294,8 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/booking-confirmed/$id'
     | '/booking/$id'
+    | '/edit-space/$id'
+    | '/host/calendar'
     | '/host/dashboard'
     | '/host/earnings'
     | '/host/manage-bookings'
@@ -266,12 +306,14 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/add-space'
+    | '/admin'
     | '/ai-pricing'
     | '/ai-recommendations'
     | '/browse'
     | '/contact'
     | '/dashboard'
     | '/faq'
+    | '/favourites'
     | '/login'
     | '/notifications'
     | '/privacy'
@@ -282,6 +324,8 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/booking-confirmed/$id'
     | '/booking/$id'
+    | '/edit-space/$id'
+    | '/host/calendar'
     | '/host/dashboard'
     | '/host/earnings'
     | '/host/manage-bookings'
@@ -292,12 +336,14 @@ export interface FileRouteTypes {
     | '/'
     | '/about'
     | '/add-space'
+    | '/admin'
     | '/ai-pricing'
     | '/ai-recommendations'
     | '/browse'
     | '/contact'
     | '/dashboard'
     | '/faq'
+    | '/favourites'
     | '/login'
     | '/notifications'
     | '/privacy'
@@ -308,6 +354,8 @@ export interface FileRouteTypes {
     | '/auth/callback'
     | '/booking-confirmed/$id'
     | '/booking/$id'
+    | '/edit-space/$id'
+    | '/host/calendar'
     | '/host/dashboard'
     | '/host/earnings'
     | '/host/manage-bookings'
@@ -319,12 +367,14 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AboutRoute: typeof AboutRoute
   AddSpaceRoute: typeof AddSpaceRoute
+  AdminRoute: typeof AdminRoute
   AiPricingRoute: typeof AiPricingRoute
   AiRecommendationsRoute: typeof AiRecommendationsRoute
   BrowseRoute: typeof BrowseRoute
   ContactRoute: typeof ContactRoute
   DashboardRoute: typeof DashboardRoute
   FaqRoute: typeof FaqRoute
+  FavouritesRoute: typeof FavouritesRoute
   LoginRoute: typeof LoginRoute
   NotificationsRoute: typeof NotificationsRoute
   PrivacyRoute: typeof PrivacyRoute
@@ -335,6 +385,8 @@ export interface RootRouteChildren {
   AuthCallbackRoute: typeof AuthCallbackRoute
   BookingConfirmedIdRoute: typeof BookingConfirmedIdRoute
   BookingIdRoute: typeof BookingIdRoute
+  EditSpaceIdRoute: typeof EditSpaceIdRoute
+  HostCalendarRoute: typeof HostCalendarRoute
   HostDashboardRoute: typeof HostDashboardRoute
   HostEarningsRoute: typeof HostEarningsRoute
   HostManageBookingsRoute: typeof HostManageBookingsRoute
@@ -363,6 +415,13 @@ declare module '@tanstack/react-router' {
       path: '/add-space'
       fullPath: '/add-space'
       preLoaderRoute: typeof AddSpaceRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/ai-pricing': {
@@ -405,6 +464,13 @@ declare module '@tanstack/react-router' {
       path: '/faq'
       fullPath: '/faq'
       preLoaderRoute: typeof FaqRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/favourites': {
+      id: '/favourites'
+      path: '/favourites'
+      fullPath: '/favourites'
+      preLoaderRoute: typeof FavouritesRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -477,6 +543,20 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof BookingIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/edit-space/$id': {
+      id: '/edit-space/$id'
+      path: '/edit-space/$id'
+      fullPath: '/edit-space/$id'
+      preLoaderRoute: typeof EditSpaceIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/host/calendar': {
+      id: '/host/calendar'
+      path: '/host/calendar'
+      fullPath: '/host/calendar'
+      preLoaderRoute: typeof HostCalendarRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/host/dashboard': {
       id: '/host/dashboard'
       path: '/host/dashboard'
@@ -519,12 +599,14 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AboutRoute: AboutRoute,
   AddSpaceRoute: AddSpaceRoute,
+  AdminRoute: AdminRoute,
   AiPricingRoute: AiPricingRoute,
   AiRecommendationsRoute: AiRecommendationsRoute,
   BrowseRoute: BrowseRoute,
   ContactRoute: ContactRoute,
   DashboardRoute: DashboardRoute,
   FaqRoute: FaqRoute,
+  FavouritesRoute: FavouritesRoute,
   LoginRoute: LoginRoute,
   NotificationsRoute: NotificationsRoute,
   PrivacyRoute: PrivacyRoute,
@@ -535,6 +617,8 @@ const rootRouteChildren: RootRouteChildren = {
   AuthCallbackRoute: AuthCallbackRoute,
   BookingConfirmedIdRoute: BookingConfirmedIdRoute,
   BookingIdRoute: BookingIdRoute,
+  EditSpaceIdRoute: EditSpaceIdRoute,
+  HostCalendarRoute: HostCalendarRoute,
   HostDashboardRoute: HostDashboardRoute,
   HostEarningsRoute: HostEarningsRoute,
   HostManageBookingsRoute: HostManageBookingsRoute,
